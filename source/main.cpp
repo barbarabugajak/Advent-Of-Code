@@ -135,7 +135,6 @@ long long Greedy(std::string Data, int k) {
 		j = pos + 1; 
 	}
 
-	std::cout << longest << std::endl;
 	return std::stoll(longest);
 }
 
@@ -173,8 +172,87 @@ void DayThree() {
 
 }
 
+std::vector<std::vector<long long>> mergeIntervals(std::vector<std::vector<long long>>& dataArray) {
+	std::sort(dataArray.begin(), dataArray.end());
+
+	std::vector<std::vector<long long>> merged;
+	merged.push_back(dataArray[0]);
+	
+	for (int i = 0; i < dataArray.size(); i++) {
+		std::vector<long long>& lastVal = merged.back();
+		std::vector<long long>& currentVal = dataArray[i];
+
+		if (currentVal[0] <= lastVal[1]) {
+			lastVal[1] = std::max(lastVal[1], currentVal[1]);
+		}
+		else {
+			merged.push_back(currentVal);
+		}
+	}
+
+	return merged;
+}
+
+void DayFive() {
+	const char* PATH = "data/cafeteria.txt";
+	std::ifstream fileStream(PATH);
+	long long value;
+	std::vector<long long> tempArr;
+	std::vector<std::vector<long long>> dataArray;
+	std::vector<long long> IDs;
+	bool bDidSwitch = false;
+
+	std::string line;
+	while (std::getline(fileStream, line)) {
+		if (line.empty()) {
+			bDidSwitch = true;
+			continue;
+		}
+
+		std::istringstream iss(line);
+
+		
+
+		while (iss >> value) {
+
+			value = std::abs(value);
+
+			if (!bDidSwitch) {
+				tempArr.push_back(value);
+
+				if (tempArr.size() == 2) {
+					dataArray.push_back(tempArr);
+					tempArr.clear();
+				}
+			}
+			else {
+				IDs.push_back(value);
+			}
+		}
+	}
+
+
+	dataArray = mergeIntervals(dataArray);
+
+	std::cout << "Amount of IDs " << IDs.size() << std::endl;
+
+	int amountOfSpoiled = 0;
+	for (int i = 0; i < IDs.size(); i++) {
+		for (int j = 0; j < dataArray.size(); j++) {
+			if (IDs[i] >= dataArray[j][0] && IDs[i] <= dataArray[j][1]) {
+				amountOfSpoiled++;
+				break;
+			}
+		}
+	}
+
+	std::cout << "Amount of Spoiled IDs " << amountOfSpoiled << std::endl;
+
+}
+
 int main() {
 	DayOne();
 	//DayTwo(); 
 	DayThree();
+	DayFive();
 }
