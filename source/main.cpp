@@ -118,17 +118,40 @@ void DayTwo() {
 	std::cout << "Sum of IDs: " << sumOfIDs << std::endl;
 }
 
+long long Greedy(std::string Data, int k) {
+	int n = Data.length();
+	std::string longest = "";
+	int j = 0; 
+	for (int r = k; r > 0; r--) {
+		char max_digit = '0';
+		int pos = j;
+		for (int i = j; i <= n - r; i++) {
+			if (Data[i] > max_digit) {
+				max_digit = Data[i];
+				pos = i;
+			}
+		}
+		longest += max_digit;
+		j = pos + 1; 
+	}
+
+	std::cout << longest << std::endl;
+	return std::stoll(longest);
+}
+
 void DayThree() {
 	const char* PATH = "data/joltages.txt";
 	std::ifstream fileStream(PATH);
 
 	std::string value;
 	int sumJoltage = 0;
+	unsigned long long int sum = 0;
 
 
 	while (fileStream >> value) {          
 
 		int best = 0;
+		
 		for (size_t i = 0; i < value.size() - 1; i++) {
 			int tens = value[i] - '0';
 
@@ -141,9 +164,11 @@ void DayThree() {
 
 		sumJoltage += best;
 
+		sum += Greedy(value, 12);
 	}
 
 	std::cout << "Max Joltage: " << sumJoltage << std::endl;
+	std::cout << "Max for 12 Joltage: " << sum << std::endl;
 
 
 }
