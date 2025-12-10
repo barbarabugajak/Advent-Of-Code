@@ -248,6 +248,13 @@ void DayFive() {
 
 	std::cout << "Amount of Spoiled IDs " << amountOfSpoiled << std::endl;
 
+
+	long long freshIdAmount = 0;
+	for (int i = 0; i < dataArray.size(); i++) {
+		freshIdAmount += (dataArray[i][1] - dataArray[i][0] + 1);
+	}
+	std::cout << "Fresh IDs " << freshIdAmount << std::endl;
+
 }
 
 int main() {
